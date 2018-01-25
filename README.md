@@ -22,9 +22,7 @@
 Угломестная диаграмма в этом случае описывается формулой (alpha - угол
 места):
 
-        F(alpha) = cos( (pi / 2) * sin(alpha) ) / cos(alpha)
-        $$F\left(\alpha\right) = \frac{ \cos \left( \frac{\pi}{2} \cdot \sin
-        \left( \alpha \right) )\right)}{\cos\left\(\alpha\right) }$$
+        `F(alpha) = cos( (pi / 2) * sin(alpha) ) / cos(alpha)`
 
 По азимуту излучение изотропно.
 
@@ -40,9 +38,9 @@
 вибратора описывается выражением для Fv(alpha), а горизонтально
 расположенного - Fh(alpha):
 
-        k = 2 * pi / lambda
+        `k = 2 * pi / lambda
         Fv(alpha) = 2 * vibrator( alpha ) * cos( k * h * sin( alpha ) )
-        F(alpha) = 2 * sin( k * h * sin(alpha) )
+        F(alpha) = 2 * sin( k * h * sin(alpha) )`
 
 У вертикального вибратора в азимутальной плоскости ДН изотропна, у
 горизонтального - нет, но для рассмотрения влияния земли это
