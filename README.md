@@ -23,6 +23,8 @@
 места):
 
         F(alpha) = cos( (pi / 2) * sin(alpha) ) / cos(alpha)
+        $$F\left(\alpha\right) = \frac{ \cos \left( \frac{\pi}{2} \cdot \sin
+        \left( \alpha \right) )\right)}{\cos\left\(\alpha\right) }$$
 
 По азимуту излучение изотропно.
 
