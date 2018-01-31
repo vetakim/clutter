@@ -2,6 +2,7 @@ import scipy as sci
 import numpy as np
 from ground import Ground
 from math import *
+from ground import *
 
 EPSILON = 1e-12
 
@@ -23,6 +24,7 @@ class Vibrator:
 
     @property
     def horizontal(self):
+        self._polarization = 'perp'
         self._isOnGround = True
         self._get_pattern = {'elevation': self._horizontal_pattern_elevation,
                              'azimuth': self._horizontal_pattern_azimuth}
@@ -30,6 +32,7 @@ class Vibrator:
 
     @property
     def vertical(self):
+        self._polarization = 'parallel'
         self._isOnGround = True
         self._get_pattern = {'elevation': self._vertical_pattern_elevation,
                              'azimuth': self._vertical_pattern_azimuth}
@@ -54,29 +57,41 @@ class Vibrator:
             F = cos((pi / 2) * sin(alpha)) / cos(alpha)
         else:
             F = 0.0
-        return F
+        return abs(F)
 
-    def _horizontal_pattern_elevation(self, alpha, ground):
+    def _horizontal_pattern_elevation(self, alpha, ground, height):
         '''значение ДН горизонтального вибратора по углу места alpha'''
-        h = ground['height']
-        F = sin(self._k * h * sin(alpha))
-        return F
+        h = height
+        p = ground.getReflection()[self._polarization]
+        k = self._k
+        Fs = sin(k * h * sin(alpha))
+        if (1 - p) < EPSILON:
+            Fp = 1
+        else:
+            Fp = hypot(1 + p * cos(2 * k * h * sin(alpha)), sin(2 * k * h * sin(alpha)))
+        return abs(Fs) * Fp
 
-    def _horizontal_pattern_azimuth(self, phi, ground):
+    def _horizontal_pattern_azimuth(self, phi, ground, height):
         '''значение ДН горизонтального вибратора по азимуту phi'''
         return nan
 
-    def _vertical_pattern_elevation(self, alpha, ground):
+    def _vertical_pattern_elevation(self, alpha, ground, height):
         '''значение ДН вертикального вибратора по углу места alpha'''
-        h = ground['height']
-        F = self._free_pattern_elevation(alpha) * cos(self._k * h * sin(alpha))
-        return F
+        h = height
+        p = ground.getReflection()[self._polarization]
+        k = self._k
+        Fs = self._free_pattern_elevation(alpha) * cos(k * h * sin(alpha))
+        if (1 - p) < EPSILON:
+            Fp = 1
+        else:
+            Fp = hypot(1 + p * cos(2 * k * h * sin(alpha)), sin(2 * k * h * sin(alpha)))
+        return abs(Fs) * Fp
 
-    def _vertical_pattern_azimuth(self, phi, ground):
+    def _vertical_pattern_azimuth(self, phi, ground, height):
         '''значение ДН вертикального вибратора по азимуту phi'''
         return nan
 
-    def calcPattern(self, elevation, azimuth=np.array([]), ground={}):
+    def calcPattern(self, elevation, azimuth=np.array([]), height=0.0):
         ''' расчет диаграммы направленности
         @usage чтобы расчитать ДН, надо сначала задать одно из свойств:
         free, horizontal или vertical.
@@ -87,10 +102,11 @@ class Vibrator:
             print('Не задано свойство размещения над землей.')
             print('Допустимые свойства: free, vertical, horizontal')
         else:
+            ground = Ground(self._lamda)
             angles = {'elevation': elevation, 'azimuth': azimuth}
             for plane in self._pattern:
                 self._pattern[plane] = np.array([
-                    self._get_pattern[plane](angle, ground)
+                    self._get_pattern[plane](angle, ground, height)
                     for angle in angles[plane]])
         return self
 
