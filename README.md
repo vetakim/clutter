@@ -39,8 +39,8 @@
 расположенного - Fh(alpha):
 
         k = 2 * pi / lambda
-        Fv(alpha) = 2 * vibrator( alpha ) * cos( k * h * sin( alpha ) )
-        F(alpha) = 2 * sin( k * h * sin(alpha) )
+        Fv(alpha) = 2 * F(alpha) * cos( k * h * sin( alpha ) )
+        Fh(alpha) = 2 * sin( k * h * sin(alpha) )
 
 У вертикального вибратора в азимутальной плоскости ДН изотропна, у
 горизонтального - нет, но для рассмотрения влияния земли это
