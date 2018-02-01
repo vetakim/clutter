@@ -92,7 +92,8 @@ class Vibrator:
         '''значение ДН вертикального вибратора по азимуту phi'''
         return nan
 
-    def calcPattern(self, elevation, azimuth=np.array([]), height=0.0, isRealGround=False):
+    def calcPattern(self, elevation, azimuth=np.array([]), height=0.0,
+                    ground=Ground()):
         ''' расчет диаграммы направленности
         @usage чтобы расчитать ДН, надо сначала задать одно из свойств:
         free, horizontal или vertical.
@@ -103,9 +104,6 @@ class Vibrator:
             print('Не задано свойство размещения над землей.')
             print('Допустимые свойства: free, vertical, horizontal')
         else:
-            ground = Ground(self._lamda)
-            if isRealGround:
-                ground.real
             angles = {'elevation': elevation, 'azimuth': azimuth}
             for plane in self._pattern:
                 self._pattern[plane] = np.array([
