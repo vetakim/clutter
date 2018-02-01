@@ -26,7 +26,7 @@ class Ground:
                             }
 
     def _get_n(self):
-        '''коэффициент преломления считается по формуле из википедии через
+        '''Коэффициент преломления считается по формуле из википедии через
         мнимую и действительную части диэлектрической проницаемости'''
         sigma = self._parameters[self._type]['sigma']
         epsilon = self._parameters[self._type]['epsilon']
@@ -36,6 +36,8 @@ class Ground:
         return self
 
     def getReflection(self, alpha):
+        '''коэффициент отражения, если тип земли дефолтный, то коэффициент
+        просто равен 1 для обеих поляризаций'''
         if self._parameters[self._type]['sigma'] == inf:
             rho = {'perp': 1, 'parallel': 1}
         else:
@@ -44,7 +46,7 @@ class Ground:
         return rho
 
     def _getReflection(self, alpha):
-        '''коэффициенты френеля рассчитываются по формулам Френеля (см.
+        '''коэффициенты отражения рассчитываются по формулам Френеля (см.
         Сивухина, Оптика, с. 406)'''
         if abs(self._n - 0.0) > EPSILON:
             phi = pi / 2 - alpha
@@ -59,4 +61,34 @@ class Ground:
             self._reflection['perp'] = perp
             self._reflection['parallel'] = parallel
         return self._reflection
+
+class Soil:
+    def __init__(self, location='IKT'):
+        tab = self._types_table
+        name = self._geography_table[location]
+        self._sand, self._silt, self._clay = tab[name]
+
+    @property
+    def _types_table(self):
+        '''соответствие названиям почв по треугольнику Ферре'''
+        tab = {'clay': (35, 5, 60),
+               'silty clay': (10, 50, 40),
+               'sandy clay': (55, 5, 40),
+               'clay loam': (30, 35, 35),
+               'silty clay loam': (10, 55, 35),
+               'sandy clay loam': (60, 10, 30),
+               'loam': (35, 45, 20),
+               'silt loam': (5, 80, 15),
+               'silt': (5, 90, 5),
+               'sandy loam': (80, 5, 15),
+               'loamy sand': (80, 15, 5),
+               'sand': (90, 7, 3)}
+        return tab
+
+    @property
+    def _geography_table(self):
+        tab = {'IKT': 'loamy sand',
+               'Sahara': 'sand'
+               }
+
 
